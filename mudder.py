@@ -100,7 +100,7 @@ class SymbolTable:
 
     def mudder(
         self,
-        a: Union[Iterable[str], int],
+        a: Union[Iterable[str], int] = "",
         b: Iterable[str] = "",
         num_strings: int = 1,
         base: Optional[int] = None,
