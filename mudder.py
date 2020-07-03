@@ -90,8 +90,8 @@ class SymbolTable:
 
 	def mudder(
 		self,
-		a: Union[str, int],
-		b: str = "",
+		a: Union[Iterable[str], int],
+		b: Iterable[str] = "",
 		num_strings: int = 1,
 		base: Optional[int] = None,
 		num_divisions: Optional[int] = None,
@@ -101,7 +101,7 @@ class SymbolTable:
 			a = ""
 			b = ""
 		a = a or self.num2sym[0]
-		b = b or self.num2sym[-1] * (len(a) + 6)
+		b = b or self.num2sym[-1] * (len(list(a)) + 6)
 		base = base or self.max_base
 		num_divisions = num_divisions or num_strings + 1
 
@@ -176,7 +176,6 @@ def long_add_same_len(
 	res = b.copy()
 	if carry:
 		remainder -= denominator
-		carry = False
 
 	for i, ai in reversed(list(enumerate(a))):
 		result = ai + b[i] + int(carry)
