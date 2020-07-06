@@ -1,6 +1,6 @@
 from itertools import tee
 
-import pytest
+import pytest  # type: ignore
 
 from mudder import SymbolTable, alphabet, base36, base62, decimal
 
