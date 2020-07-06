@@ -1,4 +1,5 @@
 import math
+from decimal import Decimal, ROUND_HALF_UP
 from functools import partial
 from itertools import chain, cycle
 from operator import add
@@ -94,7 +95,11 @@ class SymbolTable:
         base = base or self.max_base
         places = math.ceil(math.log(denominator) / math.log(base))
         scale = pow(base, places)
-        scaled = round(numerator / denominator * scale)
+        scaled = int(
+            Decimal(numerator / denominator * scale).to_integral_value(
+                rounding=ROUND_HALF_UP
+            )
+        )
         digits = self.number_to_digits(scaled, base)
         return left_pad(digits, places)
 
