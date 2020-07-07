@@ -4,6 +4,7 @@ version = "0.1.3"
 description = "Python port of mudderjs"
 readme = "README.md"
 authors = ["Patrick Gingras <775.pg.12@gmail.com>"]
+license = "BSD-3-Clause"
 
 [tool.poetry.dependencies]
 python = ">=3.6,<4"
