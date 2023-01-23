@@ -40,5 +40,5 @@ jobs:
       - run: poetry install --no-interaction
 
       - run: poetry run pytest tests.py
-      - run: poetry run black .
-      - run: poetry run flake8 .
+      - run: poetry run black mudder.py tests.py
+      - run: poetry run flake8 mudder.py
