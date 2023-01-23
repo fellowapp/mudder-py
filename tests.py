@@ -70,9 +70,9 @@ def test_fixes_1__repeated_recursive_subdivision():
 def test_fixes_2__throws_when_fed_lexicographically_adjacent_strings():
     for i in range(2, 10):
         with pytest.raises(ValueError):
-            alphabet.mudder('x' + 'a' * i, 'xa')
+            alphabet.mudder("x" + "a" * i, "xa")
         with pytest.raises(ValueError):
-            alphabet.mudder('xa', 'x' + 'a' * i)
+            alphabet.mudder("xa", "x" + "a" * i)
 
 
 def test_fixes_3__allow_calling_mudder_with_just_number():
@@ -82,14 +82,14 @@ def test_fixes_3__allow_calling_mudder_with_just_number():
 
 
 def test_more_3__no_need_to_define_start_or_end():
-    assert base36.mudder('', 'foo', 30)
-    assert base36.mudder('foo', '', 30)
+    assert base36.mudder("", "foo", 30)
+    assert base36.mudder("foo", "", 30)
 
 
 def test_fixes_7__specify_number_of_divisions():
-    fine = decimal.mudder('9', num_strings=100)
-    partial_fine = decimal.mudder('9', num_strings=5, num_divisions=101)
-    coarse = decimal.mudder('9', num_strings=5)
+    fine = decimal.mudder("9", num_strings=100)
+    partial_fine = decimal.mudder("9", num_strings=5, num_divisions=101)
+    coarse = decimal.mudder("9", num_strings=5)
 
     assert all(a < b for a, b in pairwise(fine))
     assert all(a < b for a, b in pairwise(partial_fine))
@@ -98,9 +98,9 @@ def test_fixes_7__specify_number_of_divisions():
     assert len(partial_fine) == len(coarse)
     assert partial_fine != coarse
 
-    fine = decimal.mudder('9', '8', 100)
-    partial_fine = decimal.mudder('9', '8', 5, num_divisions=101)
-    coarse = decimal.mudder('9', '8', 5)
+    fine = decimal.mudder("9", "8", 100)
+    partial_fine = decimal.mudder("9", "8", 5, num_divisions=101)
+    coarse = decimal.mudder("9", "8", 5)
 
     assert all(a > b for a, b in pairwise(fine))
     assert all(a > b for a, b in pairwise(partial_fine))
@@ -111,4 +111,4 @@ def test_fixes_7__specify_number_of_divisions():
 
 
 def test_fix_8__better_default_end():
-    assert base36.mudder('z' * 10)[0] != base36.mudder('z' * 15)[0]
+    assert base36.mudder("z" * 10)[0] != base36.mudder("z" * 15)[0]
