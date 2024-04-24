@@ -1,5 +1,5 @@
 import math
-from decimal import Decimal, ROUND_HALF_UP
+from decimal import ROUND_HALF_UP, Decimal
 from functools import partial
 from itertools import chain, cycle
 from operator import add
@@ -7,10 +7,10 @@ from typing import Dict, Iterable, List, Optional, Reversible, Tuple, Union
 
 __all__ = [
     "SymbolTable",
-    "decimal",
+    "alphabet",
     "base36",
     "base62",
-    "alphabet",
+    "decimal",
 ]
 
 
@@ -30,7 +30,7 @@ def is_prefix_code(strings: Iterable[str]) -> bool:
 class SymbolTable:
     def __init__(
         self, symbols: Iterable[str], symbol_map: Optional[Dict[str, int]] = None
-    ):
+    ) -> None:
         symbols = list(symbols)
         if not symbol_map:
             symbol_map = dict((c, i) for i, c in enumerate(symbols))
@@ -38,9 +38,8 @@ class SymbolTable:
         symbol_values = set(symbol_map.values())
         for i in range(len(symbols)):
             if i not in symbol_values:
-                raise ValueError(
-                    f"{len(symbols)} symbols given but {i} not found in symbol table"
-                )
+                msg = f"{len(symbols)} symbols given but {i} not found in symbol table"
+                raise ValueError(msg)
 
         self.num2sym = symbols
         self.sym2num = symbol_map
@@ -64,10 +63,11 @@ class SymbolTable:
     def string_to_digits(self, string: Iterable[str]) -> List[int]:
         if isinstance(string, str):
             if not self.is_prefix_code:
-                raise ValueError(
+                msg = (
                     "Parsing without prefix code is unsupported. "
                     "Pass in array of stringy symbols?"
                 )
+                raise ValueError(msg)
             string = (c for c in string if c in self.sym2num)
 
         return [self.sym2num[c] for c in string]
@@ -146,15 +146,16 @@ def long_div(
     return result, remainder
 
 
-def long_sub_same_len(  # noqa: C901
+def long_sub_same_len(
     a: List[int],
     b: List[int],
     base: int,
     remainder: Optional[Tuple[int, int]] = None,
-    denominator=0,
+    denominator: int = 0,
 ) -> Tuple[List[int], int]:
     if len(a) != len(b):
-        raise ValueError("a and b should have same length")
+        msg = "a and b should have same length"
+        raise ValueError(msg)
 
     a = a.copy()  # pre-emptively copy
     if remainder:
@@ -169,7 +170,8 @@ def long_sub_same_len(  # noqa: C901
             ret[i] = a[i] - b[i]
             continue
         if i == 0:
-            raise ValueError("Cannot go negative")
+            msg = "Cannot go negative"
+            raise ValueError(msg)
         do_break = False
         # look for a digit to the left to borrow from
         for j in reversed(range(i)):
@@ -189,7 +191,8 @@ def long_sub_same_len(  # noqa: C901
                 break
         if do_break:
             continue
-        raise ValueError("Failed to find digit to borrow from")
+        msg = "Failed to find digit to borrow from"
+        raise ValueError(msg)
     if remainder:
         # result, remainder
         return ret[:-1], ret[-1]
@@ -200,7 +203,8 @@ def long_add_same_len(
     a: List[int], b: List[int], base: int, remainder: int, denominator: int
 ) -> Tuple[List[int], bool, int, int]:
     if len(a) != len(b):
-        raise ValueError("a and b should have same length")
+        msg = "a and b should have same length"
+        raise ValueError(msg)
 
     carry = remainder >= denominator
     res = b.copy()
@@ -230,7 +234,8 @@ def long_linspace(
     elif len(b) < len(a):
         b = right_pad(b, len(a))
     if a == b:
-        raise ValueError("Start and end strings are lexicographically inseperable")
+        msg = "Start and end strings are lexicographically inseparable"
+        raise ValueError(msg)
     a_div, a_div_rem = long_div(a, m, base)
     b_div, b_div_rem = long_div(b, m, base)
 
