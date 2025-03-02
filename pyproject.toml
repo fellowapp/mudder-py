@@ -1,27 +1,45 @@
-[tool.poetry]
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
 name = "mudder"
-version = "0.2.0"
+dynamic = ["version"]
 description = "Python port of mudderjs"
 readme = "README.md"
-authors = ["Patrick Gingras <775.pg.12@gmail.com>"]
-license = "BSD-3-Clause"
-homepage = "https://github.com/fellowinsights/mudder-py"
-repository = "https://github.com/fellowinsights/mudder-py"
+requires-python = ">=3.10"
+authors = [{ name = "Patrick Gingras", email = "775.pg.12@gmail.com" }]
+license = { text = "BSD-3-Clause" }
 
-[tool.poetry.dependencies]
-python = ">=3.8.1,<4"
+[project.urls]
+Homepage = "https://github.com/fellowinsights/mudder-py"
+Repository = "https://github.com/fellowinsights/mudder-py"
 
-[tool.poetry.group.dev.dependencies]
-mypy = "^0.991"
-black = "^22.12.0"
-isort = "^5.11.4"
-pytest = "^7.2.1"
-flake8 = "^6.0.0"
-flake8-bugbear = "^23.1.20"
+[dependency-groups]
+dev = ["pyright>=1.1.396", "pytest~=8.1", "ruff~=0.4"]
 
-[tool.black]
-max-line-length = 88
+[tool.setuptools_scm]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.ruff.lint]
+select = [
+    "ANN",
+    "B",
+    "COM",
+    "E",
+    "EM",
+    "F",
+    "I",
+    "I",
+    "N",
+    "PT",
+    "RSE",
+    "RUF",
+    "SIM",
+    "UP",
+    "W",
+]
+ignore = ["COM812"]
+preview = true
+
+[tool.ruff.format]
+preview = true
