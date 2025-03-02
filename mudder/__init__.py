@@ -1,9 +1,9 @@
 import math
+from collections.abc import Iterable, Reversible
 from decimal import ROUND_HALF_UP, Decimal
 from functools import partial
 from itertools import chain, cycle
 from operator import add
-from typing import Dict, Iterable, List, Optional, Reversible, Tuple, Union
 
 __all__ = [
     "SymbolTable",
@@ -29,7 +29,7 @@ def is_prefix_code(strings: Iterable[str]) -> bool:
 
 class SymbolTable:
     def __init__(
-        self, symbols: Iterable[str], symbol_map: Optional[Dict[str, int]] = None
+        self, symbols: Iterable[str], symbol_map: dict[str, int] | None = None
     ) -> None:
         symbols = list(symbols)
         if not symbol_map:
@@ -46,9 +46,9 @@ class SymbolTable:
         self.max_base = len(symbols)
         self.is_prefix_code = is_prefix_code(symbols)
 
-    def number_to_digits(self, num: int, base: Optional[int] = None) -> List[int]:
+    def number_to_digits(self, num: int, base: int | None = None) -> list[int]:
         base = base or self.max_base
-        digits: List[int] = []
+        digits: list[int] = []
         while num >= 1:
             digits.append(num % base)
             num = num // base
@@ -60,7 +60,7 @@ class SymbolTable:
     def digits_to_string(self, digits: Iterable[int]) -> str:
         return "".join([self.num2sym[n] for n in digits])
 
-    def string_to_digits(self, string: Iterable[str]) -> List[int]:
+    def string_to_digits(self, string: Iterable[str]) -> list[int]:
         if isinstance(string, str):
             if not self.is_prefix_code:
                 msg = (
@@ -73,7 +73,7 @@ class SymbolTable:
         return [self.sym2num[c] for c in string]
 
     def digits_to_number(
-        self, digits: Reversible[int], base: Optional[int] = None
+        self, digits: Reversible[int], base: int | None = None
     ) -> int:
         base = base or self.max_base
         current_base = 1
@@ -83,15 +83,15 @@ class SymbolTable:
             current_base *= base
         return accum
 
-    def number_to_string(self, num: int, base: Optional[int] = None) -> str:
+    def number_to_string(self, num: int, base: int | None = None) -> str:
         return self.digits_to_string(self.number_to_digits(num, base=base))
 
-    def string_to_number(self, num: Iterable[str], base: Optional[int] = None) -> int:
+    def string_to_number(self, num: Iterable[str], base: int | None = None) -> int:
         return self.digits_to_number(self.string_to_digits(num), base=base)
 
     def round_fraction(
-        self, numerator: int, denominator: int, base: Optional[int] = None
-    ) -> List[int]:
+        self, numerator: int, denominator: int, base: int | None = None
+    ) -> list[int]:
         base = base or self.max_base
         places = math.ceil(math.log(denominator) / math.log(base))
         scale = pow(base, places)
@@ -105,12 +105,12 @@ class SymbolTable:
 
     def mudder(
         self,
-        a: Union[Iterable[str], int] = "",
+        a: Iterable[str] | int = "",
         b: Iterable[str] = "",
         num_strings: int = 1,
-        base: Optional[int] = None,
-        num_divisions: Optional[int] = None,
-    ) -> List[str]:
+        base: int | None = None,
+        num_divisions: int | None = None,
+    ) -> list[str]:
         if isinstance(a, int):
             num_strings = a
             a = ""
@@ -135,8 +135,8 @@ class SymbolTable:
 
 
 def long_div(
-    numerator: List[int], denominator: int, base: int
-) -> Tuple[List[int], int]:
+    numerator: list[int], denominator: int, base: int
+) -> tuple[list[int], int]:
     result = []
     remainder = 0
     for current in numerator:
@@ -147,12 +147,12 @@ def long_div(
 
 
 def long_sub_same_len(
-    a: List[int],
-    b: List[int],
+    a: list[int],
+    b: list[int],
     base: int,
-    remainder: Optional[Tuple[int, int]] = None,
+    remainder: tuple[int, int] | None = None,
     denominator: int = 0,
-) -> Tuple[List[int], int]:
+) -> tuple[list[int], int]:
     if len(a) != len(b):
         msg = "a and b should have same length"
         raise ValueError(msg)
@@ -200,8 +200,8 @@ def long_sub_same_len(
 
 
 def long_add_same_len(
-    a: List[int], b: List[int], base: int, remainder: int, denominator: int
-) -> Tuple[List[int], bool, int, int]:
+    a: list[int], b: list[int], base: int, remainder: int, denominator: int
+) -> tuple[list[int], bool, int, int]:
     if len(a) != len(b):
         msg = "a and b should have same length"
         raise ValueError(msg)
@@ -219,7 +219,7 @@ def long_add_same_len(
     return res, carry, remainder, denominator
 
 
-def right_pad(arr: List[int], to_length: int, val: int = 0) -> List[int]:
+def right_pad(arr: list[int], to_length: int, val: int = 0) -> list[int]:
     pad_len = to_length - len(arr)
     if pad_len > 0:
         return arr + [val] * pad_len
@@ -227,8 +227,8 @@ def right_pad(arr: List[int], to_length: int, val: int = 0) -> List[int]:
 
 
 def long_linspace(
-    a: List[int], b: List[int], base: int, n: int, m: int
-) -> List[Tuple[List[int], int, int]]:
+    a: list[int], b: list[int], base: int, n: int, m: int
+) -> list[tuple[list[int], int, int]]:
     if len(a) < len(b):
         a = right_pad(a, len(b))
     elif len(b) < len(a):
@@ -257,21 +257,21 @@ def long_linspace(
     return ret
 
 
-def left_pad(arr: List[int], to_length: int, val: int = 0) -> List[int]:
+def left_pad(arr: list[int], to_length: int, val: int = 0) -> list[int]:
     pad_len = to_length - len(arr)
     if pad_len > 0:
         return [val] * pad_len + arr
     return arr
 
 
-def chop_digits(rock: List[int], water: List[int]) -> List[int]:
+def chop_digits(rock: list[int], water: list[int]) -> list[int]:
     for i in range(len(water)):
         if water[i] and (i >= len(rock) or rock[i] != water[i]):
             return water[: i + 1]
     return water
 
 
-def lexicographic_less_than_array(a: List[int], b: List[int]) -> bool:
+def lexicographic_less_than_array(a: list[int], b: list[int]) -> bool:
     n = min(len(a), len(b))
     for i in range(n):
         if a[i] == b[i]:
@@ -280,7 +280,7 @@ def lexicographic_less_than_array(a: List[int], b: List[int]) -> bool:
     return len(a) < len(b)
 
 
-def chop_successive_digits(strings: List[List[int]]) -> List[List[int]]:
+def chop_successive_digits(strings: list[list[int]]) -> list[list[int]]:
     reversed_ = not lexicographic_less_than_array(strings[0], strings[1])
     if reversed_:
         strings.reverse()
@@ -304,7 +304,7 @@ base36 = SymbolTable(
         zip(
             digits + alpha_lower + alpha_upper,
             # 0-9, then 10-35 repeating (for upper and lower case)
-            chain(range(10), cycle(map(partial(add, 10), range(26)))),
+            chain(range(10), cycle(map(partial(add, 10), range(26)))), strict=False,
         )
     ),
 )
