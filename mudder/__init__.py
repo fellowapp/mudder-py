@@ -72,9 +72,7 @@ class SymbolTable:
 
         return [self.sym2num[c] for c in string]
 
-    def digits_to_number(
-        self, digits: Reversible[int], base: int | None = None
-    ) -> int:
+    def digits_to_number(self, digits: Reversible[int], base: int | None = None) -> int:
         base = base or self.max_base
         current_base = 1
         accum = 0
@@ -304,7 +302,8 @@ base36 = SymbolTable(
         zip(
             digits + alpha_lower + alpha_upper,
             # 0-9, then 10-35 repeating (for upper and lower case)
-            chain(range(10), cycle(map(partial(add, 10), range(26)))), strict=False,
+            chain(range(10), cycle(map(partial(add, 10), range(26)))),
+            strict=False,
         )
     ),
 )
